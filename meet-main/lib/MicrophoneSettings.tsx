@@ -4,6 +4,7 @@ import { TrackToggle } from '@livekit/components-react';
 import { MediaDeviceMenu } from '@livekit/components-react';
 import { Track } from 'livekit-client';
 import { isLowPowerDevice } from './client-utils';
+import styles from '../styles/DeviceSettings.module.css';
 
 export function MicrophoneSettings() {
   const { isNoiseFilterEnabled, setNoiseFilterEnabled, isNoiseFilterPending } = useKrispNoiseFilter(
@@ -26,15 +27,7 @@ export function MicrophoneSettings() {
     setNoiseFilterEnabled(!isLowPowerDevice());
   }, []);
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '10px',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
-    >
+    <div className={styles.microphoneSettings}>
       <section className="lk-button-group">
         <TrackToggle source={Track.Source.Microphone}>Microphone</TrackToggle>
         <div className="lk-button-group-menu">
@@ -43,7 +36,7 @@ export function MicrophoneSettings() {
       </section>
 
       <button
-        className="lk-button"
+        className={`${styles.noiseButton} lk-button`}
         onClick={() => setNoiseFilterEnabled(!isNoiseFilterEnabled)}
         disabled={isNoiseFilterPending}
         aria-pressed={isNoiseFilterEnabled}

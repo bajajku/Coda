@@ -8,13 +8,11 @@ import {
 } from '@livekit/components-react';
 import { BackgroundBlur, VirtualBackground } from '@livekit/track-processors';
 import { isLocalTrack, LocalTrackPublication, Track } from 'livekit-client';
-import Desk from '../public/background-images/samantha-gades-BlIhVfXbi9s-unsplash.jpg';
-import Nature from '../public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg';
+import styles from '../styles/DeviceSettings.module.css';
 
-// Background image paths
 const BACKGROUND_IMAGES = [
-  { name: 'Desk', path: Desk },
-  { name: 'Nature', path: Nature },
+  { name: 'Studio', path: '/images/livekit-meet-open-graph.png' },
+  { name: 'Signal', path: '/images/livekit-apple-touch.png' },
 ];
 
 // Background options
@@ -62,18 +60,8 @@ export function CameraSettings() {
   }, [cameraTrack, backgroundType, virtualBackgroundImagePath]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      {camTrackRef && (
-        <VideoTrack
-          style={{
-            maxHeight: '280px',
-            objectFit: 'contain',
-            objectPosition: 'right',
-            transform: 'scaleX(-1)',
-          }}
-          trackRef={camTrackRef}
-        />
-      )}
+    <div className={styles.cameraSettings}>
+      {camTrackRef && <VideoTrack className={styles.cameraPreview} trackRef={camTrackRef} />}
 
       <section className="lk-button-group">
         <TrackToggle source={Track.Source.Camera}>Camera</TrackToggle>
@@ -82,90 +70,36 @@ export function CameraSettings() {
         </div>
       </section>
 
-      <div style={{ marginTop: '10px' }}>
-        <div style={{ marginBottom: '8px' }}>Background Effects</div>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+      <div className={styles.settingBlock}>
+        <div className={styles.settingLabel}>Background Effects</div>
+        <div className={styles.swatchGrid}>
           <button
             onClick={() => selectBackground('none')}
-            className="lk-button"
+            className={styles.backgroundSwatch}
             aria-pressed={backgroundType === 'none'}
-            style={{
-              border: backgroundType === 'none' ? '2px solid #0090ff' : '1px solid #d1d1d1',
-              minWidth: '80px',
-            }}
           >
-            None
+            <span className={styles.swatchLabel}>None</span>
           </button>
 
           <button
             onClick={() => selectBackground('blur')}
-            className="lk-button"
+            className={`${styles.backgroundSwatch} ${styles.blurSwatch}`}
             aria-pressed={backgroundType === 'blur'}
-            style={{
-              border: backgroundType === 'blur' ? '2px solid #0090ff' : '1px solid #d1d1d1',
-              minWidth: '80px',
-              backgroundColor: '#f0f0f0',
-              position: 'relative',
-              overflow: 'hidden',
-              height: '60px',
-            }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: '#e0e0e0',
-                filter: 'blur(8px)',
-                zIndex: 0,
-              }}
-            />
-            <span
-              style={{
-                position: 'relative',
-                zIndex: 1,
-                backgroundColor: 'rgba(0,0,0,0.6)',
-                padding: '2px 5px',
-                borderRadius: '4px',
-                fontSize: '12px',
-              }}
-            >
-              Blur
-            </span>
+            <span className={styles.swatchLabel}>Blur</span>
           </button>
 
           {BACKGROUND_IMAGES.map((image) => (
             <button
-              key={image.path.src}
-              onClick={() => selectBackground('image', image.path.src)}
-              className="lk-button"
-              aria-pressed={
-                backgroundType === 'image' && virtualBackgroundImagePath === image.path.src
-              }
+              key={image.path}
+              onClick={() => selectBackground('image', image.path)}
+              className={`${styles.backgroundSwatch} ${styles.imageSwatch}`}
+              aria-pressed={backgroundType === 'image' && virtualBackgroundImagePath === image.path}
               style={{
-                backgroundImage: `url(${image.path.src})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                width: '80px',
-                height: '60px',
-                border:
-                  backgroundType === 'image' && virtualBackgroundImagePath === image.path.src
-                    ? '2px solid #0090ff'
-                    : '1px solid #d1d1d1',
+                backgroundImage: `url(${image.path})`,
               }}
             >
-              <span
-                style={{
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                  padding: '2px 5px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                }}
-              >
-                {image.name}
-              </span>
+              <span className={styles.swatchLabel}>{image.name}</span>
             </button>
           ))}
         </div>
