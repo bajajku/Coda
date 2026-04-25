@@ -12,29 +12,12 @@ export function RecordingIndicator() {
       if (isRecording) {
         toast('This meeting is being recorded', {
           duration: 3000,
-          icon: '🎥',
           position: 'top-center',
-          className: 'lk-button',
-          style: {
-            backgroundColor: 'var(--lk-danger3)',
-            color: 'var(--lk-fg)',
-          },
+          className: 'recording-toast',
         });
       }
     }
   }, [isRecording]);
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        boxShadow: isRecording ? 'var(--lk-danger3) 0px 0px 0px 3px inset' : 'none',
-        pointerEvents: 'none',
-      }}
-    ></div>
-  );
+  return <div className="recording-frame" data-recording={isRecording}></div>;
 }

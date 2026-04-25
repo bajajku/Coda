@@ -74,7 +74,7 @@ export function SettingsMenu(props: SettingsMenuProps) {
   };
 
   return (
-    <div className="settings-menu" style={{ width: '100%', position: 'relative' }} {...props}>
+    <div className="settings-menu" {...props}>
       <div className={styles.tabs}>
         {tabs.map(
           (tab) =>
@@ -141,7 +141,7 @@ export function SettingsMenu(props: SettingsMenuProps) {
           </>
         )}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+      <div className={styles.closeRow}>
         <button
           className={`lk-button`}
           onClick={() => layoutContext?.widget.dispatch?.({ msg: 'toggle_settings' })}
