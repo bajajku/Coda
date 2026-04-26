@@ -39,6 +39,7 @@ import {
 } from 'livekit-client';
 import { useRouter } from 'next/navigation';
 import { runDemo } from '@/lib/contentApi';
+import { CodaMark } from '@/components/CodaMark';
 import { useSetupE2EE } from '@/lib/useSetupE2EE';
 import { useLowCPUOptimizer } from '@/lib/usePerfomanceOptimiser';
 import { useBrowserSpeechTranscription } from '@/lib/useBrowserSpeechTranscription';
@@ -180,6 +181,16 @@ export function PageClientImpl(props: {
       {connectionDetails === undefined || preJoinChoices === undefined ? (
         <div className="prejoin-shell">
           <div className="prejoin-card">
+            <div className="coda-prejoin-header">
+              <CodaMark size={36} />
+              <div>
+                <div className="coda-prejoin-eyebrow">CODA · NEW SESSION</div>
+                <div className="coda-prejoin-title">Set the stage.</div>
+                <div className="coda-prejoin-sub">
+                  Your recap will draft itself the moment you leave the room.
+                </div>
+              </div>
+            </div>
             {!mediaShimReady && (
               <div className="room-alert-banner" role="status">
                 Preparing view-only mode...
@@ -334,12 +345,23 @@ function VideoConferenceComponent(props: {
 
   const router = useRouter();
   const handleLeaveFiredRef = React.useRef(false);
+  const meetingTranscriptRef = React.useRef<string[]>([]);
   const handleOnLeave = React.useCallback(() => {
     if (handleLeaveFiredRef.current) return;
     handleLeaveFiredRef.current = true;
+    const startedAt = new Date();
+    const transcript = meetingTranscriptRef.current.join('\n').trim();
     void (async () => {
       try {
-        const data = await runDemo(`Meeting Recap - ${new Date().toLocaleString()}`);
+        const data = await runDemo(
+          transcript
+            ? {
+                title: `Meeting Recap — ${startedAt.toLocaleString()}`,
+                transcript: `# Meeting transcript\n\nCaptured ${startedAt.toISOString()}\n\n${transcript}\n`,
+                transcriptTitle: 'Live meeting transcript',
+              }
+            : { title: `Meeting Recap — ${startedAt.toLocaleString()}` },
+        );
         if (data.notebook_id) {
           router.push(`/recap/${data.notebook_id}`);
           return;
@@ -496,6 +518,11 @@ function VideoConferenceComponent(props: {
         },
         ...prev,
       ].slice(0, 4));
+      const cleaned = segment.text.trim();
+      if (cleaned) {
+        const ts = new Date(segment.timestampMs).toISOString().slice(11, 19);
+        meetingTranscriptRef.current.push(`[${ts}] ${segment.speaker}: ${cleaned}`);
+      }
       try {
         await postAiTranscript({
           sessionId,
@@ -824,6 +851,15 @@ function VideoConferenceComponent(props: {
 
   return (
     <div className="lk-room-container">
+      <div className="coda-room-badge" aria-label="Coda session armed">
+        <CodaMark size={22} />
+        <span className="coda-room-word">Coda</span>
+        <span className="coda-room-divider" aria-hidden />
+        <span className="coda-room-status">
+          <span className="coda-room-pulse" aria-hidden />
+          recap arming
+        </span>
+      </div>
       <button
         type="button"
         className="room-share-launcher lk-button"

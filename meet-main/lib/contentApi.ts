@@ -120,12 +120,26 @@ export async function fetchRuns(): Promise<PastRun[]> {
   }
 }
 
-export async function runDemo(title?: string): Promise<DemoRunResponse> {
+export type RunDemoOptions = {
+  title?: string;
+  transcript?: string;
+  transcriptTitle?: string;
+};
+
+export async function runDemo(
+  optsOrTitle?: string | RunDemoOptions,
+): Promise<DemoRunResponse> {
+  const opts: RunDemoOptions =
+    typeof optsOrTitle === 'string' ? { title: optsOrTitle } : optsOrTitle ?? {};
+  const body: Record<string, unknown> = {};
+  if (opts.title) body.title = opts.title;
+  if (opts.transcript && opts.transcript.trim()) body.transcript = opts.transcript;
+  if (opts.transcriptTitle) body.transcript_title = opts.transcriptTitle;
   const resp = await fetch(`${CONTENT_API_URL}/api/demo/run`, {
     method: 'POST',
     mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(title ? { title } : {}),
+    body: JSON.stringify(body),
   });
   if (!resp.ok) throw new Error(`Failed to start demo run (${resp.status})`);
   return (await resp.json()) as DemoRunResponse;
