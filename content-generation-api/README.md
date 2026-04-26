@@ -21,7 +21,7 @@ uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/api/auth/status` | Check authentication status |
-| `POST` | `/api/auth/login?browser=chromium` | Browser-based Google login |
+| `POST` | `/api/auth/login` | Trigger NotebookLM login flow |
 
 ### Notebooks
 | Method | Path | Description |
