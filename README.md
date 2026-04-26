@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./.github/assets/coda/landing.png" alt="Coda — Talk freely. We'll write the recap, the deck, the quiz." />
+  <img src="./meet-main/.github/assets/coda/landing.png" alt="Coda — Talk freely. We'll write the recap, the deck, the quiz." />
 </p>
 
 # Coda
@@ -16,19 +16,19 @@ And while you're still in the room — share an **interactive 3D space** with ev
 
 Watch the walkthrough on YouTube: **<https://youtu.be/3CKrapzaJ-k>**
 
-A local copy of the demo reel lives at [`.github/assets/coda/coda.mp4`](./.github/assets/coda/coda.mp4).
+A local copy of the demo reel lives at [`meet-main/.github/assets/coda/coda.mp4`](./meet-main/.github/assets/coda/coda.mp4).
 
 ## What it looks like
 
 | Open the room | In a shared world |
 |---|---|
-| <img src="./.github/assets/coda/open-room.png" alt="Open the room" /> | <img src="./.github/assets/coda/meeting-with-participants.png" alt="Two participants in a shared 3D workspace" /> |
+| <img src="./meet-main/.github/assets/coda/open-room.png" alt="Open the room" /> | <img src="./meet-main/.github/assets/coda/meeting-with-participants.png" alt="Two participants in a shared 3D workspace" /> |
 
 **Worlds, not slides.** The host shares a navigable 3D scene instead of a deck. Cursors and camera state sync over LiveKit data channels.
 
 | Control room | Library |
 |---|---|
-| <img src="./.github/assets/coda/workspace-control-room.png" alt="Coda control-room workspace" /> | <img src="./.github/assets/coda/workspace-library.png" alt="Coda library workspace" /> |
+| <img src="./meet-main/.github/assets/coda/workspace-control-room.png" alt="Coda control-room workspace" /> | <img src="./meet-main/.github/assets/coda/workspace-library.png" alt="Coda library workspace" /> |
 
 ## What's in the box
 
@@ -44,12 +44,13 @@ A local copy of the demo reel lives at [`.github/assets/coda/coda.mp4`](./.githu
 - [LiveKit Components](https://github.com/livekit/components-js) (`@livekit/components-react`, `livekit-client`, `livekit-server-sdk`)
 - [Krisp noise filter](https://www.npmjs.com/package/@livekit/krisp-noise-filter) and [`@livekit/track-processors`](https://www.npmjs.com/package/@livekit/track-processors)
 - Browser `SpeechRecognition` for live transcription
-- Companion Python agent service (FastAPI + Pipecat) for KG extraction, world generation, and recap artifacts — see [`../agent`](../agent) and [`../content-generation-api`](../content-generation-api)
+- Companion Python agent service (FastAPI + Pipecat) for KG extraction, world generation, and recap artifacts — see [`agent/`](./agent) and [`content-generation-api/`](./content-generation-api)
 - Datadog browser logs, Vitest, Prettier, ESLint, pnpm
 
 ## Dev setup
 
 ```bash
+cd meet-main
 pnpm install
 cp .env.example .env.local        # fill LiveKit keys + agent URLs
 pnpm dev                          # http://localhost:3000
@@ -74,7 +75,7 @@ Use `pnpm dev:lan` to expose the app on your local network, then open `http://<y
 
 This repo can stream host screen-share frames and meeting transcript signals to a separate Python service that turns them into the recap bundle.
 
-1. Start the agent service from `../agent`:
+1. Start the agent service from `./agent`:
 
    ```bash
    python3.13 -m venv .venv313
@@ -113,8 +114,10 @@ meet-main/
 ├── public/               # static worlds + assets
 ├── styles/               # global + module CSS
 └── .github/assets/coda/  # the screenshots in this README
+agent/                    # Python recap pipeline (FastAPI + Pipecat)
+content-generation-api/   # artifact generation service
 ```
 
 ## License
 
-Apache 2.0 — see [LICENSE](./LICENSE). Built on [LiveKit Meet](https://github.com/livekit/meet) (also Apache 2.0).
+Apache 2.0 — see [LICENSE](./meet-main/LICENSE). Built on [LiveKit Meet](https://github.com/livekit/meet) (also Apache 2.0).
